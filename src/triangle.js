@@ -2,12 +2,7 @@ var gl;
 var points;
 
 var TriangleHelper = {
-    vertices: [
-        vec2(-1, -1),
-        vec2(0, 5),
-        vec2(1, -1)
-    ],
-
+    triangles: [],
     /**
      * Create an array of vertices used to render a triangle at the given location.
      * @param {number} scale The size of the triangle.
@@ -44,16 +39,21 @@ var TriangleHelper = {
     },
 
     init: function () {
+        // Three Vertices.
+        TriangleHelper.registerTriangle(1.4, 0.5, 0.5, 30);
+        TriangleHelper.registerTriangle(3, -0.5, -0.5, 50);
+
+        TriangleHelper.drawTriangles();
+    },
+
+    drawTriangles: function() {
         var canvas = document.getElementById("gl-canvas");
         gl = WebGLUtils.setupWebGL(canvas);
         if (!gl) {
             alert("WebGL isn't available");
         }
 
-        // Three Vertices.
-        var vertices = TriangleHelper.createVertexArray(1.4, 0, 0, 30);
-
-        // Configure WebGL
+        // Configure WebGL.
         gl.viewport(0, 0, canvas.width, canvas.height);
         gl.clearColor(1.0, 1.0, 1.0, 1.0);
 
@@ -63,7 +63,7 @@ var TriangleHelper = {
         // Load the data into the GPU.
         var bufferId = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
-        gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices),
+        gl.bufferData(gl.ARRAY_BUFFER, flatten(TriangleHelper.triangles),
             gl.STATIC_DRAW);
 
         // Associate out shader variables with our data buffer.
@@ -75,7 +75,18 @@ var TriangleHelper = {
 
     render: function () {
         gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        /** The changes below have been adapted from [WebGL Fundamentals]{@link http://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html}*/
+        gl.drawArrays(gl.TRIANGLES, 0, TriangleHelper.triangles.length);
+    },
+
+    clearTriangles: function () {
+        TriangleHelper.triangles = [];
+    },
+
+    // TODO allow specification of colour. This property can be changed in gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+    registerTriangle: function (scale, xCoord, yCoord, rotation) {
+        var vertices = TriangleHelper.createVertexArray(scale, xCoord, yCoord, rotation);
+        TriangleHelper.triangles = TriangleHelper.triangles.concat(vertices);
     }
 };
 

@@ -10,20 +10,34 @@ var TriangleHelper = {
 
     /**
      * Create an array of vertices used to render a triangle at the given location.
-     * @param {number} scale CURRENTLY SIDE LENGTH. The size of the triangle - specifies bounding box of the triangle. If 1 then it is [1, 1]
+     * @param {number} scale The size of the triangle.
      * @param {number} xCoord The x coordinate.
      * @param {number} yCoord The y coordinate.
      * @param {number} [rotation] The rotation of the triangle in degrees.
      */
-    createVertexArray : function (scale, xCoord, yCoord, rotation) {
-        var topYCoord = yCoord + 0.5 * scale * ( Math.sqrt(3) - 0.5 ),
-            leftXCoord = xCoord - 0.5 * scale,
-            leftYCoord = yCoord - 0.25 * scale,
-            rightYCoord = yCoord - 0.25 * scale,
-            rightXCoord = xCoord + 0.5 * scale;
+    createVertexArray: function (scale, xCoord, yCoord, rotation) {
+        scale = 1 / scale;
+
+        if (rotation === undefined) {
+            rotation = 0;
+        } else {
+            rotation *= (Math.PI / 180 )
+        }
+
+        var middleToTopCornerLength = 0.5 * scale * ( Math.sqrt(3) - 0.5 ),
+            topXCoord = xCoord + middleToTopCornerLength * Math.sin(rotation),
+            topYCoord = yCoord + middleToTopCornerLength * Math.cos(rotation),
+            leftXCoord = xCoord + middleToTopCornerLength * Math.sin(rotation + 2 * Math.PI / 3),
+            leftYCoord = yCoord + middleToTopCornerLength * Math.cos(rotation + 2 * Math.PI / 3),
+            rightXCoord = xCoord + middleToTopCornerLength * Math.sin(rotation + 4 * Math.PI / 3),
+            rightYCoord = yCoord + middleToTopCornerLength * Math.cos(rotation + 4 * Math.PI / 3);
+        //leftXCoord = xCoord - 0.5 * scale,
+        //leftYCoord = yCoord - 0.25 * scale,
+        //rightYCoord = yCoord - 0.25 * scale,
+        //rightXCoord = xCoord + 0.5 * scale;
 
         return [
-            vec2(xCoord, topYCoord),
+            vec2(topXCoord, topYCoord),
             vec2(leftXCoord, leftYCoord),
             vec2(rightXCoord, rightYCoord)
         ]
@@ -37,7 +51,7 @@ var TriangleHelper = {
         }
 
         // Three Vertices.
-        var vertices = TriangleHelper.createVertexArray(1, 1, 1);
+        var vertices = TriangleHelper.createVertexArray(1.4, 0, 0, 30);
 
         // Configure WebGL
         gl.viewport(0, 0, canvas.width, canvas.height);

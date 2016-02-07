@@ -6,7 +6,8 @@ window.onload = function init() {
     if (!gl) {
         alert("WebGL isn't available");
     }
-// Three Vertices
+
+    // Three Vertices
     var vertices = [
         vec2(-1, -1),
         vec2(0, 1),
@@ -14,14 +15,13 @@ window.onload = function init() {
     ];
 
     // Configure WebGL
-//
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
 
-// Load shaders and initialize attribute buffers
+    // Load shaders and initialize attribute buffers
     var program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
-// Load the data into the GPU
+    // Load the data into the GPU
     var bufferId = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices),

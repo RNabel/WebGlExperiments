@@ -4,9 +4,30 @@ var points;
 var TriangleHelper = {
     vertices: [
         vec2(-1, -1),
-        vec2(0, 1),
+        vec2(0, 5),
         vec2(1, -1)
     ],
+
+    /**
+     * Create an array of vertices used to render a triangle at the given location.
+     * @param {number} scale CURRENTLY SIDE LENGTH. The size of the triangle - specifies bounding box of the triangle. If 1 then it is [1, 1]
+     * @param {number} xCoord The x coordinate.
+     * @param {number} yCoord The y coordinate.
+     * @param {number} [rotation] The rotation of the triangle in degrees.
+     */
+    createVertexArray : function (scale, xCoord, yCoord, rotation) {
+        var topYCoord = yCoord + 0.5 * scale * ( Math.sqrt(3) - 0.5 ),
+            leftXCoord = xCoord - 0.5 * scale,
+            leftYCoord = yCoord - 0.25 * scale,
+            rightYCoord = yCoord - 0.25 * scale,
+            rightXCoord = xCoord + 0.5 * scale;
+
+        return [
+            vec2(xCoord, topYCoord),
+            vec2(leftXCoord, leftYCoord),
+            vec2(rightXCoord, rightYCoord)
+        ]
+    },
 
     init: function () {
         var canvas = document.getElementById("gl-canvas");
@@ -16,7 +37,7 @@ var TriangleHelper = {
         }
 
         // Three Vertices.
-        var vertices = TriangleHelper.vertices;
+        var vertices = TriangleHelper.createVertexArray(1, 1, 1);
 
         // Configure WebGL
         gl.viewport(0, 0, canvas.width, canvas.height);

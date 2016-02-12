@@ -60,6 +60,11 @@ var TriangleHelper = {
         // Load shaders and initialize attribute buffers.
         var program = initShaders(gl, "vertex-shader", "fragment-shader");
         gl.useProgram(program);
+
+        // Set random colour.
+        var colorLoc = gl.getUniformLocation(program, "u_color");
+        gl.uniform4f(colorLoc, Math.random(), Math.random(), Math.random(), 1);
+
         // Load the data into the GPU.
         var bufferId = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
